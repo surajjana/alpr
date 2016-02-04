@@ -8,3 +8,5 @@
 	echo "deb http://deb.openalpr.com/master/ openalpr main" | sudo tee /etc/apt/sources.list.d/openalpr.list
 	sudo apt-get update
 	sudo apt-get install openalpr openalpr-daemon openalpr-utils libopenalpr-dev
+
+### Setting up python libraries
