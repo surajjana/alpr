@@ -10,3 +10,6 @@
 	sudo apt-get install openalpr openalpr-daemon openalpr-utils libopenalpr-dev
 
 ### Setting up python libraries
+
+	sudo apt-get update
+	sudo apt-get install python-pip
