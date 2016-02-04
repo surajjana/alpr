@@ -10,5 +10,3 @@ r = raw_input("Enter your choice : ")
 
 if r == '1':
 	call("python add.py",shell=True)
-
-no prblm 

@@ -16,3 +16,7 @@
 	sudo apt-get install python-opencv
 	sudo apt-get install python-numpy
 	sudo apt-get install python-mysqldb
+
+### Setting Up MySQL Server
+
+	sudo apt-get install mysql-server
