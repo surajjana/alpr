@@ -14,9 +14,10 @@ while(True):
     cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
     	cv2.imwrite('test_snap.png',frame)
-    	print "Snap taken..."
+        cap.release()
+        cv2.destroyAllWindows()
         break
 
 # When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+name = raw_input("Enter Name : ")
+print "Snap taken...", name
