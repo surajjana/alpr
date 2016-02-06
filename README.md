@@ -20,3 +20,10 @@
 ### Setting Up MySQL Server
 
 	sudo apt-get install mysql-server
+
+### Running the project
+
+	python home.py
+
+	User ID : admin
+	Pwd : 12345
