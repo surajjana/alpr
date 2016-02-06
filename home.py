@@ -1,7 +1,8 @@
 from subprocess import call
+import time
 import MySQLdb
 
-db = MySQLdb.connect("localhost","root","hack123","test")
+db = MySQLdb.connect("localhost","root","root123","test")
 cursor = db.cursor()
 
 uid = raw_input("Enter User ID : ")
@@ -10,8 +11,9 @@ pwd = raw_input("Enter Password : ")
 if uid == 'admin' and pwd == '12345':
 	print "1. Add vehicle"
 	print "2. Vehicle status"
-	print "3. Delete vehicle"
-	print "4. Exit"
+	print "3. Vehicle search"
+	print "4. Delete vehicle"
+	print "5. Exit"
 
 	r = raw_input("Enter your choice : ")
 
@@ -20,6 +22,21 @@ if uid == 'admin' and pwd == '12345':
 	elif r == '2':
 		print "Coming soon... :)"
 	elif r == '3':
+		uname = raw_input("Enter User Name : ")
+
+		sql = "SELECT * FROM alpr WHERE uname='"+uname+"'"
+		try:
+			cursor.execute(sql)
+			db.commit()
+			data = cursor.fetchall()
+			a = int(float(data[0][3]))
+			print "User Name : ",data[0][0]
+			print "DOJ : ",time.strftime("%D %H:%M", time.localtime(int(str(a))))
+			print "Department : ",data[0][4]
+			print "Vehicle No. : ",data[0][5]
+		except:
+			print "Error... :("
+	elif r == '4':
 		dname = raw_input("Enter User Name : ")
 
 		sql = "SELECT * FROM alpr WHERE uname='"+dname+"'"
@@ -27,9 +44,9 @@ if uid == 'admin' and pwd == '12345':
 		  cursor.execute(sql)
 		  db.commit()
 		  data = cursor.fetchall()
-		  #print data[0][0]
+		  a = int(float(data[0][3]))
 		  print "User Name : ",data[0][0]
-		  print "DOJ : ",data[0][3]
+		  print "DOJ : ",time.strftime("%D %H:%M", time.localtime(int(str(a))))
 		  print "Department : ",data[0][4]
 		  print "Vehicle No. : ",data[0][5]
 		  val = raw_input("\nDo you want to delete user?(y/n) : ")

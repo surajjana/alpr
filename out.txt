@@ -1,2 +1,1 @@
-plate0: 1 results
-    - RK115AN	 confidence: 90.2173
+No license plates found.

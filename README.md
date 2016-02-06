@@ -27,3 +27,5 @@
 
 	User ID : admin
 	Pwd : 12345
+
+	Press q to capture image

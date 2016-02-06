@@ -5,7 +5,7 @@ import MySQLdb
 import time
 
 cap = cv2.VideoCapture(0)
-db = MySQLdb.connect("localhost","root","hack123","test")
+db = MySQLdb.connect("localhost","root","root123","test")
 cursor = db.cursor()
 
 while(True):
@@ -25,26 +25,29 @@ doj = str(time.time())
 status = 0
 status_time = "NULL"
 
-call("alpr -c eu -n 1 ./samples/test_005.jpg > out.txt", shell=True)
+call("alpr -c eu -n 1 test_snap.png > out.txt", shell=True)
 fo = open("out.txt", "r+")
 data = fo.read()
-data = data.split("-")
-data = data[1].split("\t")
-data = data[0].split(" ")
-data = data[1]
+if data == 'No license plates found.\n':
+  print "Invalid image..."
+else:
+  data = data.split("-")
+  data = data[1].split("\t")
+  data = data[0].split(" ")
+  data = data[1]
 
-uname = raw_input("Enter User Name : ")
-email = raw_input("Enter Email : ")
-phone = raw_input("Enter Phone No. : ")
-dept = raw_input("Enter Department : ")
-lnum = str(data)
+  uname = raw_input("Enter User Name : ")
+  email = raw_input("Enter Email : ")
+  phone = raw_input("Enter Phone No. : ")
+  dept = raw_input("Enter Department : ")
+  lnum = str(data)
 
-sql = "INSERT INTO alpr(uname,email,phone,doj,dept,lnum,status,status_time) VALUES('"+uname+"','"+email+"','"+phone+"','"+doj+"','"+dept+"','"+lnum+"',"+str(status)+",'"+status_time+"')"
-try:
-  cursor.execute(sql)
-  db.commit()
-  #data = cursor.fetchall()
-  print "Vehicle added!!"
-except:
-  print "Error... :("
-db.close()
+  sql = "INSERT INTO alpr(uname,email,phone,doj,dept,lnum,status,status_time) VALUES('"+uname+"','"+email+"','"+phone+"','"+doj+"','"+dept+"','"+lnum+"',"+str(status)+",'"+status_time+"')"
+  try:
+    cursor.execute(sql)
+    db.commit()
+    #data = cursor.fetchall()
+    print "Vehicle added!!"
+  except:
+    print "Error... :("
+  db.close()
