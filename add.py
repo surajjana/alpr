@@ -25,7 +25,7 @@ doj = str(time.time())
 status = 0
 status_time = "NULL"
 
-call("alpr -c eu -n 1 ./samples/test_001.jpg > out.txt", shell=True)
+call("alpr -c eu -n 1 ./samples/test_005.jpg > out.txt", shell=True)
 fo = open("out.txt", "r+")
 data = fo.read()
 data = data.split("-")
