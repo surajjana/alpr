@@ -1,7 +1,10 @@
 import numpy as np
 import cv2
+import MySQLdb
 
 cap = cv2.VideoCapture(0)
+db = MySQLdb.connect("localhost","root","hack123","test")
+cursor = db.cursor()
 
 while(True):
     # Capture frame-by-frame
@@ -20,4 +23,12 @@ while(True):
 
 # When everything done, release the capture
 name = raw_input("Enter Name : ")
-print "Snap taken...", name
+sql = "INSERT INTO info(name,age) VALUES('"+name+"',21)"
+try:
+  cursor.execute(sql)
+  db.commit()
+  #data = cursor.fetchall()
+  print "Vehicle added!!"
+except:
+  print "Error... :("
+db.close()
