@@ -1,0 +1,203 @@
+from Tkinter import *
+import tkMessageBox
+from subprocess import call
+import MySQLdb
+import time
+import cv2
+
+db = MySQLdb.connect("localhost","root","hack123","test")
+cursor = db.cursor()
+
+master = Tk()
+master.title("ALPR")
+master.geometry("300x300")
+
+l = Label(master, text="\nALPR Home\n\n")
+l.pack()
+
+
+def addVehicle():
+	#call("python ./alpr_final/add.py", shell=True)
+	cap = cv2.VideoCapture(0)
+	while(True):
+
+	    ret, frame = cap.read()
+
+	    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+	    cv2.imshow('frame',frame)
+	    if cv2.waitKey(1) & 0xFF == ord('q'):
+	    	cv2.imwrite('test_snap.png',frame)
+	        cap.release()
+	        cv2.destroyAllWindows()
+	        break
+
+	call("alpr -c eu -n 1 test_snap.png > out.txt", shell=True)
+	fo = open("out.txt", "r+")
+	data = fo.read()
+	if data == 'No license plates found.\n':
+	  tkMessageBox.showinfo("Alert","Invalid Image!!")
+	else:
+	  	data = data.split("-")
+	  	data = data[1].split("\t")
+	  	data = data[0].split(" ")
+	  	data = data[1]
+
+	  	m = Tk()
+		m.title("ALPR")
+		m.geometry("300x300")
+
+		l = Label(m, text="\nAdd Vehicle\n\n")
+		l.pack()
+		l2 = Label(m, text="User Name")
+		l2.pack()
+		e2 = Entry(m)
+		e2.pack()
+		e2.focus_set()
+		l3 = Label(m, text="Email ID")
+		l3.pack()
+		e3 = Entry(m)
+		e3.pack()
+		e3.focus_set()
+		l4 = Label(m, text="Phone No")
+		l4.pack()
+		e4 = Entry(m)
+		e4.pack()
+		e4.focus_set()
+		l5 = Label(m, text="Department")
+		l5.pack()
+		e5 = Entry(m)
+		e5.pack()
+		e5.focus_set()
+
+		def submitInfo():
+			doj = str(time.time())
+			status = 0
+			status_time = "NULL"
+			lnum = str(data)
+			uname = e2.get()
+			email = e3.get()
+			phone = e4.get()
+			dept = e5.get()
+			sql = "INSERT INTO alpr(uname,email,phone,doj,dept,lnum,status,status_time) VALUES('"+uname+"','"+email+"','"+phone+"','"+doj+"','"+dept+"','"+lnum+"',"+str(status)+",'"+status_time+"')"
+			cursor.execute(sql)
+			db.commit()
+			tkMessageBox.showinfo( "ALPR", "Vehicle Added!!")
+			exit(0)  
+
+		b = Button(m, text="Submit", width=10, command=submitInfo)
+		b.pack()
+		mainloop()
+	exit(0)
+
+def searchVehicle():
+	m = Tk()
+	m.title("ALPR")
+	m.geometry("300x300")
+
+	l = Label(m, text="\nSearch Vehicle\n\n")
+	l.pack()
+	l1 = Label(m, text="User Name")
+	l1.pack()
+	e1 = Entry(m)
+	e1.pack()
+	e1.focus_set()
+
+	def searchInfo():
+		sql = "SELECT * FROM alpr WHERE uname='"+e1.get()+"'"
+		try:
+			cursor.execute(sql)
+			data = cursor.fetchall()
+			a = int(float(data[0][3]))
+			tkMessageBox.showinfo( "ALPR Vehicle Info", "User Name : "+data[0][0]+"\nDOJ : "+time.strftime("%D %H:%M", time.localtime(int(str(a))))+"\nDepartment : "+data[0][4]+"\nVehicle No. : "+data[0][5])
+		except:
+			tkMessageBox.showinfo("ALPR Vehicle Info", "Error!!")
+		exit(0)  
+
+	b = Button(m, text="Submit", width=10, command=searchInfo)
+	b.pack()
+	mainloop()
+	exit(0)
+
+def deleteVehicle():
+	m = Tk()
+	m.title("ALPR")
+	m.geometry("300x300")
+
+	l = Label(m, text="\nDelete Vehicle\n\n")
+	l.pack()
+	l1 = Label(m, text="User Name")
+	l1.pack()
+	e1 = Entry(m)
+	e1.pack()
+	e1.focus_set()
+
+	def deleteInfo():
+		sql = "DELETE FROM alpr WHERE uname='"+e1.get()+"'"
+		try:
+			cursor.execute(sql)
+			db.commit()
+			tkMessageBox.showinfo( "ALPR Vehicle Info", "Vehicle removed!!")
+		except:
+			tkMessageBox.showinfo("ALPR Vehicle Info", "Error!!")
+		exit(0)  
+
+	b = Button(m, text="Submit", width=10, command=deleteInfo)
+	b.pack()
+	mainloop()
+	exit(0)
+
+def vehicleStatus():
+	m = Tk()
+	m.title("ALPR")
+	m.geometry("300x300")
+
+	l = Label(m, text="\nVehicle Status\n\n")
+	l.pack()
+	l1 = Label(m, text="User Name")
+	l1.pack()
+	e1 = Entry(m)
+	e1.pack()
+	e1.focus_set()
+
+	def checkStatus():
+		sql = "SELECT status,status_time FROM alpr WHERE uname='"+e1.get()+"'"
+		try:
+			cursor.execute(sql)
+			data = cursor.fetchall()
+			db.commit()
+			status = ""
+			if data[0][0] == 0:
+				status = "Checked Out"
+			else:
+				status = "Checked In"
+			if data[0][1]:
+				time = "NULL"
+			else:
+				a = int(float(data[0][1]))
+				time = time.strftime("%D %H:%M", time.localtime(int(str(a))))
+			tkMessageBox.showinfo( "ALPR Vehicle Status", "Status : "+status+"\nTime : "+time)
+		except:
+			tkMessageBox.showinfo("ALPR Vehicle Status", "Error!!")
+		exit(0)
+
+	b = Button(m, text="Submit", width=10, command=checkStatus)
+	b.pack()
+	mainloop()
+	exit(0)
+
+def checkIn_Out():
+	exit(0)
+
+b1 = Button(master, text="Add Vehicle", width=10, command=addVehicle)
+b1.pack()
+b2 = Button(master, text="Search Vehicle", width=10, command=searchVehicle)
+b2.pack()
+b3 = Button(master, text="Delete Vehicle", width=10, command=deleteVehicle)
+b3.pack()
+b4 = Button(master, text="Vehicle Status", width=10, command=vehicleStatus)
+b4.pack()
+b5 = Button(master, text="Check-In/Out", width=10, command=checkIn_Out)
+b5.pack()
+
+mainloop()
