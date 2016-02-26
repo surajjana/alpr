@@ -187,6 +187,54 @@ def vehicleStatus():
 	exit(0)
 
 def checkIn_Out():
+	m = Tk()
+	m.title("ALPR")
+	m.geometry("300x300")
+
+	l = Label(m, text="\nVehicle Status\n\n")
+	l.pack()
+	l1 = Label(m, text="User Name")
+	l1.pack()
+	e1 = Entry(m)
+	e1.pack()
+	e1.focus_set()
+
+	def checkIn():
+		sql = "select status from alpr where uname='"+e1.get()+"'"
+		try:
+			cursor.execute(sql)
+			data = cursor.fetchall()
+			if data[0][0] == 0:
+				sql = "update alpr set status=1 where uname='"+e1.get()+"'"
+				cursor.execute(sql)
+				db.commit()
+				tkMessageBox.showinfo( "ALPR Vehicle Status", "Checked In!!")	
+			else:
+				tkMessageBox.showinfo( "ALPR Vehicle Status", "Already Checked In!!")		
+		except:
+			tkMessageBox.showinfo("ALPR Vehicle Status", "Error!!")
+		exit(0)
+	def checkOut():
+		sql = "select status from alpr where uname='"+e1.get()+"'"
+		try:
+			cursor.execute(sql)
+			data = cursor.fetchall()
+			if data[0][0] == 1:
+				sql = "update alpr set status=0 where uname='"+e1.get()+"'"
+				cursor.execute(sql)
+				db.commit()
+				tkMessageBox.showinfo( "ALPR Vehicle Status", "Checked Out!!")	
+			else:
+				tkMessageBox.showinfo( "ALPR Vehicle Status", "Already Checked Out!!")		
+		except:
+			tkMessageBox.showinfo("ALPR Vehicle Status", "Error!!")
+		exit(0)
+
+	b1 = Button(m, text="Check In", width=10, command=checkIn)
+	b1.pack()
+	b2 = Button(m, text="Check Out", width=10, command=checkOut)
+	b2.pack()
+	mainloop()
 	exit(0)
 
 b1 = Button(master, text="Add Vehicle", width=10, command=addVehicle)

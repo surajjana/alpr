@@ -16,6 +16,7 @@
 	sudo apt-get install python-opencv
 	sudo apt-get install python-numpy
 	sudo apt-get install python-mysqldb
+	sudo apt-get install python-tk
 
 ### Setting Up MySQL Server
 
@@ -26,6 +27,11 @@
 	python home.py
 
 	User ID : admin
+	Pwd : 12345
+
+	Security Login :
+
+	User ID : sec
 	Pwd : 12345
 
 	Press q to capture image
